@@ -1,0 +1,889 @@
+==django-rest-framework.rest_framework.fields:[449:480]
+==django-rest-framework.rest_framework.relations:[538:560]
+        except (KeyError, AttributeError) as exc:
+            if self.default is not empty:
+                return self.get_default()
+            if self.allow_null:
+                return None
+            if not self.required:
+                raise SkipField()
+            msg = (
+                'Got {exc_type} when attempting to get a value for field '
+                '`{field}` on serializer `{serializer}`.\nThe serializer '
+                'field might be named incorrectly and not match '
+                'any attribute or key on the `{instance}` instance.\n'
+                'Original exception text was: {exc}.'.format(
+                    exc_type=type(exc).__name__,
+                    field=self.field_name,
+                    serializer=self.parent.__class__.__name__,
+                    instance=instance.__class__.__name__,
+                    exc=exc
+                )
+            )
+            raise type(exc)(msg)
+
+    def get_default(self):
+        """
+        Return the default value to use when validating data if no input
+        is provided for this field.
+
+        If a default has not been set for this field then this will simply
+        raise `SkipField`, indicating that no value should be set in the
+        validated data for this field.
+        """ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_renderers:[162:199]
+==django-rest-framework.tests.test_response:[142:180]
+        resp = self.client.get('/')
+        self.assertEqual(resp['Content-Type'], RendererA.media_type + '; charset=utf-8')
+        self.assertEqual(resp.content, RENDERER_A_SERIALIZER(DUMMYCONTENT))
+        self.assertEqual(resp.status_code, DUMMYSTATUS)
+
+    def test_head_method_serializes_no_content(self):
+        """No response must be included in HEAD requests."""
+        resp = self.client.head('/')
+        self.assertEqual(resp.status_code, DUMMYSTATUS)
+        self.assertEqual(resp['Content-Type'], RendererA.media_type + '; charset=utf-8')
+        self.assertEqual(resp.content, b'')
+
+    def test_default_renderer_serializes_content_on_accept_any(self):
+        """If the Accept header is set to */* the default renderer should serialize the response."""
+        resp = self.client.get('/', HTTP_ACCEPT='*/*')
+        self.assertEqual(resp['Content-Type'], RendererA.media_type + '; charset=utf-8')
+        self.assertEqual(resp.content, RENDERER_A_SERIALIZER(DUMMYCONTENT))
+        self.assertEqual(resp.status_code, DUMMYSTATUS)
+
+    def test_specified_renderer_serializes_content_default_case(self):
+        """If the Accept header is set the specified renderer should serialize the response.
+        (In this case we check that works for the default renderer)"""
+        resp = self.client.get('/', HTTP_ACCEPT=RendererA.media_type)
+        self.assertEqual(resp['Content-Type'], RendererA.media_type + '; charset=utf-8')
+        self.assertEqual(resp.content, RENDERER_A_SERIALIZER(DUMMYCONTENT))
+        self.assertEqual(resp.status_code, DUMMYSTATUS)
+
+    def test_specified_renderer_serializes_content_non_default_case(self):
+        """If the Accept header is set the specified renderer should serialize the response.
+        (In this case we check that works for a non-default renderer)"""
+        resp = self.client.get('/', HTTP_ACCEPT=RendererB.media_type)
+        self.assertEqual(resp['Content-Type'], RendererB.media_type + '; charset=utf-8')
+        self.assertEqual(resp.content, RENDERER_B_SERIALIZER(DUMMYCONTENT))
+        self.assertEqual(resp.status_code, DUMMYSTATUS)
+
+    def test_unsatisfiable_accept_header_on_request_returns_406_status(self):
+        """If the Accept header is unsatisfiable we should return a 406 Not Acceptable response.""" (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==click.src.click.__init__:[76:98]
+==click.src.click.core:[2957:2975]
+    if name == "BaseCommand":
+        warnings.warn(
+            "'BaseCommand' is deprecated and will be removed in Click 9.0. Use"
+            " 'Command' instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return _BaseCommand
+
+    if name == "MultiCommand":
+        warnings.warn(
+            "'MultiCommand' is deprecated and will be removed in Click 9.0. Use"
+            " 'Group' instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return _MultiCommand
+ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==flask.src.flask.app:[289:358]
+==flask.src.flask.blueprints:[71:129]
+        value = current_app.config["SEND_FILE_MAX_AGE_DEFAULT"]
+
+        if value is None:
+            return None
+
+        if isinstance(value, timedelta):
+            return int(value.total_seconds())
+
+        return value  # type: ignore[no-any-return]
+
+    def send_static_file(self, filename: str) -> Response:
+        """The view function used to serve files from
+        :attr:`static_folder`. A route is automatically registered for
+        this view at :attr:`static_url_path` if :attr:`static_folder` is
+        set.
+
+        Note this is a duplicate of the same method in the Flask
+        class.
+
+        .. versionadded:: 0.5
+
+        """
+        if not self.has_static_folder:
+            raise RuntimeError("'static_folder' must be set to serve static_files.")
+
+        # send_file only knows to call get_send_file_max_age on the app,
+        # call it here so it works for blueprints too.
+        max_age = self.get_send_file_max_age(filename)
+        return send_from_directory(
+            t.cast(str, self.static_folder), filename, max_age=max_age
+        )
+
+    def open_resource(self, resource: str, mode: str = "rb") -> t.IO[t.AnyStr]:
+        """Open a resource file relative to :attr:`root_path` for
+        reading.
+
+        For example, if the file ``schema.sql`` is next to the file
+        ``app.py`` where the ``Flask`` app is defined, it can be opened
+        with:
+
+        .. code-block:: python
+
+            with app.open_resource("schema.sql") as f:
+                conn.executescript(f.read())
+
+        :param resource: Path to the resource relative to
+            :attr:`root_path`.
+        :param mode: Open the file in this mode. Only reading is
+            supported, valid values are "r" (or "rt") and "rb".
+
+        Note this is a duplicate of the same method in the Flask
+        class.
+
+        """
+        if mode not in {"r", "rt", "rb"}:
+            raise ValueError("Resources can only be opened for reading.")
+
+        return open(os.path.join(self.root_path, resource), mode) (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[496:514]
+==django-rest-framework.tests.test_relations_slug:[242:260]
+            {'id': 3, 'name': 'source-3', 'target': None},
+            {'id': 4, 'name': 'source-4', 'target': None}
+        ]
+        assert serializer.data == expected
+
+    def test_foreign_key_update_with_valid_null(self):
+        data = {'id': 1, 'name': 'source-1', 'target': None}
+        instance = NullableForeignKeySource.objects.get(pk=1)
+        serializer = NullableForeignKeySourceSerializer(instance, data=data)
+        assert serializer.is_valid()
+        serializer.save()
+        assert serializer.data == data
+
+        # Ensure source 1 is updated, and everything else is as expected
+        queryset = NullableForeignKeySource.objects.all()
+        serializer = NullableForeignKeySourceSerializer(queryset, many=True)
+        expected = [
+            {'id': 1, 'name': 'source-1', 'target': None}, (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[472:494]
+==django-rest-framework.tests.test_relations_slug:[218:240]
+            {'id': 3, 'name': 'source-3', 'target': None},
+            {'id': 4, 'name': 'source-4', 'target': None}
+        ]
+        assert serializer.data == expected
+
+    def test_foreign_key_create_with_valid_emptystring(self):
+        """
+        The emptystring should be interpreted as null in the context
+        of relationships.
+        """
+        data = {'id': 4, 'name': 'source-4', 'target': ''}
+        expected_data = {'id': 4, 'name': 'source-4', 'target': None}
+        serializer = NullableForeignKeySourceSerializer(data=data)
+        assert serializer.is_valid()
+        obj = serializer.save()
+        assert serializer.data == expected_data
+        assert obj.name == 'source-4'
+
+        # Ensure source 4 is created, and everything else is as expected
+        queryset = NullableForeignKeySource.objects.all()
+        serializer = NullableForeignKeySourceSerializer(queryset, many=True)
+        expected = [ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.rest_framework.pagination:[412:423]
+==django-rest-framework.tests.test_pagination:[587:598]
+            'type': 'object',
+            'required': ['count', 'results'],
+            'properties': {
+                'count': {
+                    'type': 'integer',
+                    'example': 123,
+                },
+                'next': {
+                    'type': 'string',
+                    'nullable': True,
+                    'format': 'uri', (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.rest_framework.pagination:[239:250]
+==django-rest-framework.tests.test_pagination:[275:286]
+            'type': 'object',
+            'required': ['count', 'results'],
+            'properties': {
+                'count': {
+                    'type': 'integer',
+                    'example': 123,
+                },
+                'next': {
+                    'type': 'string',
+                    'nullable': True,
+                    'format': 'uri', (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==click.docs.conf:[19:30]
+==flask.docs.conf:[20:31]
+    "pallets_sphinx_themes",
+]
+autodoc_member_order = "bysource"
+autodoc_typehints = "description"
+autodoc_preserve_defaults = True
+extlinks = {
+    "issue": ("https://github.com/pallets/flask/issues/%s", "#%s"),
+    "pr": ("https://github.com/pallets/flask/pull/%s", "#%s"),
+}
+intersphinx_mapping = {
+    "python": ("https://docs.python.org/3/", None), (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==flask.src.flask.app:[55:78]
+==flask.src.flask.sansio.app:[35:58]
+if t.TYPE_CHECKING:  # pragma: no cover
+    from werkzeug.wrappers import Response as BaseResponse
+
+    from ..testing import FlaskClient
+    from ..testing import FlaskCliRunner
+    from .blueprints import Blueprint
+
+T_shell_context_processor = t.TypeVar(
+    "T_shell_context_processor", bound=ft.ShellContextProcessorCallable
+)
+T_teardown = t.TypeVar("T_teardown", bound=ft.TeardownCallable)
+T_template_filter = t.TypeVar("T_template_filter", bound=ft.TemplateFilterCallable)
+T_template_global = t.TypeVar("T_template_global", bound=ft.TemplateGlobalCallable)
+T_template_test = t.TypeVar("T_template_test", bound=ft.TemplateTestCallable)
+
+
+def _make_timedelta(value: timedelta | int | None) -> timedelta | None:
+    if value is None or isinstance(value, timedelta):
+        return value
+
+    return timedelta(seconds=value)
+
+ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_api_client:[166:179]
+==django-rest-framework.tests.test_requests_client:[42:55]
+class HeadersView(APIView):
+    def get(self, request):
+        headers = {
+            key[5:].replace('_', '-'): value
+            for key, value in request.META.items()
+            if key.startswith('HTTP_')
+        }
+        return Response({
+            'method': request.method,
+            'headers': headers
+        })
+
+ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[440:452]
+==django-rest-framework.tests.test_relations_slug:[186:198]
+        target = ForeignKeyTarget(name='target-1')
+        target.save()
+        for idx in range(1, 4):
+            if idx == 3:
+                target = None
+            source = NullableForeignKeySource(name='source-%d' % idx, target=target)
+            source.save()
+
+    def test_foreign_key_retrieve_with_null(self):
+        queryset = NullableForeignKeySource.objects.all()
+        serializer = NullableForeignKeySourceSerializer(queryset, many=True)
+        expected = [ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[223:235]
+==django-rest-framework.tests.test_relations_slug:[46:58]
+        target = ForeignKeyTarget(name='target-1')
+        target.save()
+        new_target = ForeignKeyTarget(name='target-2')
+        new_target.save()
+        for idx in range(1, 4):
+            source = ForeignKeySource(name='source-%d' % idx, target=target)
+            source.save()
+
+    def test_foreign_key_retrieve(self):
+        queryset = ForeignKeySource.objects.all()
+        serializer = ForeignKeySourceSerializer(queryset, many=True)
+        expected = [ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[515:537]
+==django-rest-framework.tests.test_relations_slug:[261:283]
+            {'id': 3, 'name': 'source-3', 'target': None}
+        ]
+        assert serializer.data == expected
+
+    def test_foreign_key_update_with_valid_emptystring(self):
+        """
+        The emptystring should be interpreted as null in the context
+        of relationships.
+        """
+        data = {'id': 1, 'name': 'source-1', 'target': ''}
+        expected_data = {'id': 1, 'name': 'source-1', 'target': None}
+        instance = NullableForeignKeySource.objects.get(pk=1)
+        serializer = NullableForeignKeySourceSerializer(instance, data=data)
+        assert serializer.is_valid()
+        serializer.save()
+        assert serializer.data == expected_data
+
+        # Ensure source 1 is updated, and everything else is as expected
+        queryset = NullableForeignKeySource.objects.all()
+        serializer = NullableForeignKeySourceSerializer(queryset, many=True)
+        expected = [
+            {'id': 1, 'name': 'source-1', 'target': None}, (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[454:470]
+==django-rest-framework.tests.test_relations_slug:[200:216]
+            {'id': 3, 'name': 'source-3', 'target': None},
+        ]
+        assert serializer.data == expected
+
+    def test_foreign_key_create_with_valid_null(self):
+        data = {'id': 4, 'name': 'source-4', 'target': None}
+        serializer = NullableForeignKeySourceSerializer(data=data)
+        assert serializer.is_valid()
+        obj = serializer.save()
+        assert serializer.data == data
+        assert obj.name == 'source-4'
+
+        # Ensure source 4 is created, and everything else is as expected
+        queryset = NullableForeignKeySource.objects.all()
+        serializer = NullableForeignKeySourceSerializer(queryset, many=True)
+        expected = [ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==click.docs.conf:[42:51]
+==flask.docs.conf:[50:59]
+        ProjectLink("Chat", "https://discord.gg/pallets"),
+    ]
+}
+html_sidebars = {
+    "index": ["project.html", "localtoc.html", "searchbox.html", "ethicalads.html"],
+    "**": ["localtoc.html", "relations.html", "searchbox.html", "ethicalads.html"],
+}
+singlehtml_sidebars = {"index": ["project.html", "localtoc.html", "ethicalads.html"]}
+html_static_path = ["_static"] (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.browsable_api.test_browsable_api:[38:48]
+==django-rest-framework.tests.test_permissions:[547:555]
+        self.username = 'john'
+        self.email = 'lennon@thebeatles.com'
+        self.password = 'password'
+        self.user = User.objects.create_user(
+            self.username,
+            self.email,
+            self.password
+        ) (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_renderers:[57:73]
+==django-rest-framework.tests.test_response:[47:63]
+class RendererA(BaseRenderer):
+    media_type = 'mock/renderera'
+    format = "formata"
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return RENDERER_A_SERIALIZER(data)
+
+
+class RendererB(BaseRenderer):
+    media_type = 'mock/rendererb'
+    format = "formatb"
+
+    def render(self, data, media_type=None, renderer_context=None):
+        return RENDERER_B_SERIALIZER(data)
+
+ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.browsable_api.test_form_rendering:[61:69]
+==django-rest-framework.tests.test_generics:[85:93]
+        items = ['foo', 'bar', 'baz']
+        for item in items:
+            BasicModel(text=item).save()
+        self.objects = BasicModel.objects
+        self.data = [
+            {'id': obj.id, 'text': obj.text}
+            for obj in self.objects.all()
+        ] (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[331:341]
+==django-rest-framework.tests.test_relations_slug:[160:170]
+        serializer = ForeignKeyTargetSerializer(data=data)
+        assert serializer.is_valid()
+        obj = serializer.save()
+        assert serializer.data == data
+        assert obj.name == 'target-3'
+
+        # Ensure target 3 is added, and everything else is as expected
+        queryset = ForeignKeyTarget.objects.all()
+        serializer = ForeignKeyTargetSerializer(queryset, many=True)
+        expected = [ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[294:305]
+==django-rest-framework.tests.test_relations_slug:[122:133]
+            {'id': 2, 'name': 'target-2', 'sources': []},
+        ]
+        assert new_serializer.data == expected
+
+        serializer.save()
+        assert serializer.data == data
+
+        # Ensure target 2 is update, and everything else is as expected
+        queryset = ForeignKeyTarget.objects.all()
+        serializer = ForeignKeyTargetSerializer(queryset, many=True)
+        expected = [ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[260:270]
+==django-rest-framework.tests.test_relations_slug:[88:98]
+        instance = ForeignKeySource.objects.get(pk=1)
+        serializer = ForeignKeySourceSerializer(instance, data=data)
+        assert serializer.is_valid()
+        serializer.save()
+        assert serializer.data == data
+
+        # Ensure source 1 is updated, and everything else is as expected
+        queryset = ForeignKeySource.objects.all()
+        serializer = ForeignKeySourceSerializer(queryset, many=True)
+        expected = [ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_hyperlink:[328:338]
+==django-rest-framework.tests.test_relations_pk:[440:450]
+        target = ForeignKeyTarget(name='target-1')
+        target.save()
+        for idx in range(1, 4):
+            if idx == 3:
+                target = None
+            source = NullableForeignKeySource(name='source-%d' % idx, target=target)
+            source.save()
+
+    def test_foreign_key_retrieve_with_null(self):
+        queryset = NullableForeignKeySource.objects.all() (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_hyperlink:[199:209]
+==django-rest-framework.tests.test_relations_pk:[223:233]
+        target = ForeignKeyTarget(name='target-1')
+        target.save()
+        new_target = ForeignKeyTarget(name='target-2')
+        new_target.save()
+        for idx in range(1, 4):
+            source = ForeignKeySource(name='source-%d' % idx, target=target)
+            source.save()
+
+    def test_foreign_key_retrieve(self):
+        queryset = ForeignKeySource.objects.all() (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_hyperlink:[74:84]
+==django-rest-framework.tests.test_relations_pk:[100:110]
+        for idx in range(1, 4):
+            target = ManyToManyTarget(name='target-%d' % idx)
+            target.save()
+            source = ManyToManySource(name='source-%d' % idx)
+            source.save()
+            for target in ManyToManyTarget.objects.all():
+                source.targets.add(target)
+
+    def test_relative_hyperlinks(self):
+        queryset = ManyToManySource.objects.all() (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.schemas.test_coreapi:[394:411]
+==django-rest-framework.tests.schemas.views:[17:34]
+class ExampleListView(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get(self, *args, **kwargs):
+        pass
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
+class ExampleDetailView(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get(self, *args, **kwargs):
+        pass
+
+ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_renderers:[210:225]
+==django-rest-framework.tests.test_response:[181:196]
+        self.assertEqual(resp['Content-Type'], RendererB.media_type + '; charset=utf-8')
+        self.assertEqual(resp.content, RENDERER_B_SERIALIZER(DUMMYCONTENT))
+        self.assertEqual(resp.status_code, DUMMYSTATUS)
+
+    def test_specified_renderer_serializes_content_on_format_kwargs(self):
+        """If a 'format' keyword arg is specified, the renderer with the matching
+        format attribute should serialize the response."""
+        resp = self.client.get('/something.formatb')
+        self.assertEqual(resp['Content-Type'], RendererB.media_type + '; charset=utf-8')
+        self.assertEqual(resp.content, RENDERER_B_SERIALIZER(DUMMYCONTENT))
+        self.assertEqual(resp.status_code, DUMMYSTATUS)
+
+    def test_specified_renderer_is_used_on_format_query_with_matching_accept(self):
+        """If both a 'format' query and a matching Accept header specified,
+        the renderer with the matching format attribute should serialize the response.""" (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[344:355]
+==django-rest-framework.tests.test_relations_slug:[173:184]
+        ]
+        assert serializer.data == expected
+
+    def test_foreign_key_update_with_invalid_null(self):
+        data = {'id': 1, 'name': 'source-1', 'target': None}
+        instance = ForeignKeySource.objects.get(pk=1)
+        serializer = ForeignKeySourceSerializer(instance, data=data)
+        assert not serializer.is_valid()
+        assert serializer.errors == {'target': ['This field may not be null.']}
+
+    def test_foreign_key_with_unsaved(self): (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[313:322]
+==django-rest-framework.tests.test_relations_slug:[142:151]
+        assert serializer.is_valid()
+        obj = serializer.save()
+        assert serializer.data == data
+        assert obj.name == 'source-4'
+
+        # Ensure source 4 is added, and everything else is as expected
+        queryset = ForeignKeySource.objects.all()
+        serializer = ForeignKeySourceSerializer(queryset, many=True)
+        expected = [ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.rest_framework.pagination:[903:910]
+==django-rest-framework.tests.test_pagination:[940:947]
+            'type': 'object',
+            'required': ['results'],
+            'properties': {
+                'next': {
+                    'type': 'string',
+                    'nullable': True,
+                    'format': 'uri', (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==flask.src.flask.sansio.blueprints:[17:24]
+==flask.src.flask.sansio.scaffold:[27:34]
+T_after_request = t.TypeVar("T_after_request", bound=ft.AfterRequestCallable[t.Any])
+T_before_request = t.TypeVar("T_before_request", bound=ft.BeforeRequestCallable)
+T_error_handler = t.TypeVar("T_error_handler", bound=ft.ErrorHandlerCallable)
+T_teardown = t.TypeVar("T_teardown", bound=ft.TeardownCallable)
+T_template_context_processor = t.TypeVar(
+    "T_template_context_processor", bound=ft.TemplateContextProcessorCallable
+) (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==flask.src.flask.sansio.app:[294:302]
+==flask.src.flask.sansio.blueprints:[186:194]
+        super().__init__(
+            import_name=import_name,
+            static_folder=static_folder,
+            static_url_path=static_url_path,
+            template_folder=template_folder,
+            root_path=root_path,
+        )
+ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==click.examples.aliases.aliases:[63:72]
+==click.tests.typing.typing_aliased_group:[15:26]
+        if not matches:
+            return None
+        elif len(matches) == 1:
+            return click.Group.get_command(self, ctx, matches[0])
+        ctx.fail(f"Too many matches: {', '.join(sorted(matches))}")
+
+    def resolve_command(self, ctx, args):
+        # always return the command's name, not the alias
+        _, cmd, args = super().resolve_command(ctx, args) (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.rest_framework.fields:[1462:1471]
+==django-rest-framework.rest_framework.relations:[516:526]
+            return dictionary.getlist(self.field_name)
+        return dictionary.get(self.field_name, empty)
+
+    def to_internal_value(self, data):
+        if isinstance(data, str) or not hasattr(data, '__iter__'):
+            self.fail('not_a_list', input_type=type(data).__name__)
+        if not self.allow_empty and len(data) == 0:
+            self.fail('empty')
+ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.rest_framework.filters:[189:195]
+==django-rest-framework.rest_framework.pagination:[533:539]
+        assert coreapi is not None, 'coreapi must be installed to use `get_schema_fields()`'
+        if coreapi is not None:
+            warnings.warn('CoreAPI compatibility is deprecated and will be removed in DRF 3.17', RemovedInDRF317Warning)
+        assert coreschema is not None, 'coreschema must be installed to use `get_schema_fields()`'
+        return [
+            coreapi.Field( (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_renderers:[97:111]
+==django-rest-framework.tests.test_response:[91:105]
+class HTMLView(APIView):
+    renderer_classes = (BrowsableAPIRenderer, )
+
+    def get(self, request, **kwargs):
+        return Response('text')
+
+
+class HTMLView1(APIView):
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer)
+
+    def get(self, request, **kwargs):
+        return Response('text')
+
+ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[285:293]
+==django-rest-framework.tests.test_relations_slug:[113:121]
+        instance = ForeignKeyTarget.objects.get(pk=2)
+        serializer = ForeignKeyTargetSerializer(instance, data=data)
+        assert serializer.is_valid()
+        # We shouldn't have saved anything to the db yet since save
+        # hasn't been called.
+        queryset = ForeignKeyTarget.objects.all()
+        new_serializer = ForeignKeyTargetSerializer(queryset, many=True)
+        expected = [ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.schemas.test_coreapi:[86:118]
+==django-rest-framework.tests.test_viewsets:[63:88]
+        raise NotImplementedError
+
+    @action(methods=['post'], detail=True, serializer_class=AnotherSerializerWithDictField)
+    def custom_action_with_dict_field(self, request, pk):
+        """
+        A custom action using a dict field in the serializer.
+        """
+        raise NotImplementedError
+
+    @action(methods=['post'], detail=True, serializer_class=AnotherSerializerWithListFields)
+    def custom_action_with_list_fields(self, request, pk):
+        """
+        A custom action using both list field and list serializer in the serializer.
+        """
+        raise NotImplementedError
+
+    @action(detail=False)
+    def custom_list_action(self, request):
+        raise NotImplementedError
+
+    @action(methods=['post', 'get'], detail=False, serializer_class=EmptySerializer)
+    def custom_list_action_multiple_methods(self, request):
+        """Custom description."""
+        raise NotImplementedError
+
+    @custom_list_action_multiple_methods.mapping.delete
+    def custom_list_action_multiple_methods_delete(self, request):
+        """Deletion description."""
+        raise NotImplementedError
+
+    @action(detail=False, schema=None)
+    def excluded_action(self, request): (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==requests.src.requests.adapters:[529:534]
+==requests.src.requests.sessions:[266:271]
+            stream=stream,
+            timeout=timeout,
+            verify=verify,
+            cert=cert,
+            proxies=proxies, (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.rest_framework.filters:[348:355]
+==django-rest-framework.rest_framework.pagination:[933:940]
+        return template.render(context)
+
+    def get_schema_fields(self, view):
+        assert coreapi is not None, 'coreapi must be installed to use `get_schema_fields()`'
+        if coreapi is not None:
+            warnings.warn('CoreAPI compatibility is deprecated and will be removed in DRF 3.17', RemovedInDRF317Warning)
+        assert coreschema is not None, 'coreschema must be installed to use `get_schema_fields()`' (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.rest_framework.filters:[186:193]
+==django-rest-framework.rest_framework.pagination:[313:320]
+        return template.render(context)
+
+    def get_schema_fields(self, view):
+        assert coreapi is not None, 'coreapi must be installed to use `get_schema_fields()`'
+        if coreapi is not None:
+            warnings.warn('CoreAPI compatibility is deprecated and will be removed in DRF 3.17', RemovedInDRF317Warning)
+        assert coreschema is not None, 'coreschema must be installed to use `get_schema_fields()`' (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.browsable_api.test_form_rendering:[7:16]
+==django-rest-framework.tests.test_permissions:[18:27]
+factory = APIRequestFactory()
+
+
+class BasicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BasicModel
+        fields = '__all__'
+
+ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_pk:[250:259]
+==django-rest-framework.tests.test_relations_slug:[78:87]
+        assert serializer.data == expected
+
+    def test_reverse_foreign_key_retrieve_prefetch_related(self):
+        queryset = ForeignKeyTarget.objects.all().prefetch_related('sources')
+        serializer = ForeignKeyTargetSerializer(queryset, many=True)
+        with self.assertNumQueries(2):
+            serializer.data
+
+    def test_foreign_key_update(self): (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_hyperlink:[373:380]
+==django-rest-framework.tests.test_relations_pk:[485:492]
+        assert serializer.is_valid()
+        obj = serializer.save()
+        assert serializer.data == expected_data
+        assert obj.name == 'source-4'
+
+        # Ensure source 4 is created, and everything else is as expected
+        queryset = NullableForeignKeySource.objects.all() (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_hyperlink:[302:309]
+==django-rest-framework.tests.test_relations_pk:[332:339]
+        assert serializer.is_valid()
+        obj = serializer.save()
+        assert serializer.data == data
+        assert obj.name == 'target-3'
+
+        # Ensure target 4 is added, and everything else is as expected
+        queryset = ForeignKeyTarget.objects.all() (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_hyperlink:[179:186]
+==django-rest-framework.tests.test_relations_pk:[204:211]
+        assert serializer.is_valid()
+        obj = serializer.save()
+        assert serializer.data == data
+        assert obj.name == 'target-4'
+
+        # Ensure target 4 is added, and everything else is as expected
+        queryset = ManyToManyTarget.objects.all() (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_hyperlink:[349:356]
+==django-rest-framework.tests.test_relations_pk:[461:468]
+        assert serializer.is_valid()
+        obj = serializer.save()
+        assert serializer.data == data
+        assert obj.name == 'source-4'
+
+        # Ensure source 4 is created, and everything else is as expected
+        queryset = NullableForeignKeySource.objects.all() (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_hyperlink:[283:290]
+==django-rest-framework.tests.test_relations_pk:[313:320]
+        assert serializer.is_valid()
+        obj = serializer.save()
+        assert serializer.data == data
+        assert obj.name == 'source-4'
+
+        # Ensure source 4 is added, and everything else is as expected
+        queryset = ForeignKeySource.objects.all() (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.test_relations_hyperlink:[160:167]
+==django-rest-framework.tests.test_relations_pk:[175:182]
+        assert serializer.is_valid()
+        obj = serializer.save()
+        assert serializer.data == data
+        assert obj.name == 'source-4'
+
+        # Ensure source 4 is added, and everything else is as expected
+        queryset = ManyToManySource.objects.all() (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.schemas.views:[234:249]
+==django-rest-framework.tests.test_fields:[49:63]
+        pass
+
+    def create(self, request):
+        pass
+
+    def retrieve(self, request, pk=None):
+        pass
+
+    def update(self, request, pk=None):
+        pass
+
+    def partial_update(self, request, pk=None):
+        pass
+
+    def destroy(self, request, pk=None): (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.schemas.test_coreapi:[86:114]
+==django-rest-framework.tests.test_viewsets:[67:88]
+        raise NotImplementedError
+
+    @action(detail=True, url_name='detail-custom')
+    def custom_detail_action(self, request, *args, **kwargs):
+        raise NotImplementedError
+
+    @action(detail=True, url_path=r'unresolvable/(?P<arg>\w+)', url_name='unresolvable')
+    def unresolvable_detail_action(self, request, *args, **kwargs):
+        raise NotImplementedError
+
+    @action(detail=False)
+    @decorate
+    def wrapped_list_action(self, request, *args, **kwargs):
+        raise NotImplementedError
+
+    @action(detail=True)
+    @decorate
+    def wrapped_detail_action(self, request, *args, **kwargs):
+        raise NotImplementedError
+
+ (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==django-rest-framework.tests.schemas.test_coreapi:[93:118]
+==django-rest-framework.tests.test_viewsets:[63:85]
+        raise NotImplementedError
+
+    @action(detail=True)
+    def detail_action(self, request, *args, **kwargs):
+        raise NotImplementedError
+
+    @action(detail=True, url_name='detail-custom')
+    def custom_detail_action(self, request, *args, **kwargs):
+        raise NotImplementedError
+
+    @action(detail=True, url_path=r'unresolvable/(?P<arg>\w+)', url_name='unresolvable')
+    def unresolvable_detail_action(self, request, *args, **kwargs):
+        raise NotImplementedError
+
+    @action(detail=False)
+    @decorate
+    def wrapped_list_action(self, request, *args, **kwargs):
+        raise NotImplementedError
+
+    @action(detail=True)
+    @decorate
+    def wrapped_detail_action(self, request, *args, **kwargs): (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==click.docs.conf:[12:17]
+==flask.docs.conf:[13:18]
+default_role = "code"
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.extlinks",
+    "sphinx.ext.intersphinx", (duplicate-code)
+projects/BeautifulSoup4/bs4/builder/__init__.py:1:0: R0801: Similar lines in 2 files
+==flask.tests.test_basic:[655:669]
+==flask.tests.test_blueprints:[697:711]
+    evts = []
+
+    @bp.before_request
+    def before_bp():
+        evts.append("before")
+
+    @bp.after_request
+    def after_bp(response):
+        response.data += b"|after"
+        evts.append("after")
+        return response
+
+    @bp.teardown_request
+    def teardown_bp(exc): (duplicate-code)
+
+-----------------------------------
+Your code has been rated at 6.43/10
